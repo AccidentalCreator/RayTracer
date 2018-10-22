@@ -14,6 +14,10 @@ public:
 	void ShowScreen();
 	void CloseScreen();
 
+	void DrawPixel(int _x, int _y, glm::vec3 _colour);
+
+	glm::vec2 GetScreenSize();
+
 private:
 	glm::vec2 screenSize;
 

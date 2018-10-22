@@ -39,3 +39,17 @@ void Screen::CloseScreen()
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
+
+void Screen::DrawPixel(int _x, int _y, glm::vec3 _colour)
+{
+	// Set draw colour
+	SDL_SetRenderDrawColor(renderer, _colour.x, _colour.y, _colour.z, 255);
+
+	// Draw pixel
+	SDL_RenderDrawPoint(renderer, _x, _y);
+}
+
+glm::vec2 Screen::GetScreenSize()
+{
+	return screenSize;
+}
