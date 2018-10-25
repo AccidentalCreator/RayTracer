@@ -5,9 +5,11 @@
 
 void Screen::CreateScreen(glm::vec2 _screenSize)
 {
+	screenSize = _screenSize;
+
 	window = SDL_CreateWindow("RayTracer", 
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		_screenSize.x, _screenSize.y,
+		screenSize.x, screenSize.y,
 		SDL_WINDOW_RESIZABLE);
 
 	if (!window)
