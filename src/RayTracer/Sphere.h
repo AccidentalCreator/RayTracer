@@ -17,11 +17,13 @@ public:
 	glm::vec3 RaySphereIntersec(Ray *_ray);
 	glm::vec3 SphereNormal(glm::vec3 _samplePoint);
 
+	glm::vec3 GetCenter() { return centre; }
+	float GetRadius() { return radius; }
 
 private:
 	glm::vec3 centre;
 	glm::vec3 normal;
-	int radius;
+	float radius;
 	float ColMod(float a, float b, float t);
 
 };

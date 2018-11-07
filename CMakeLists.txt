@@ -24,12 +24,14 @@ add_executable(RayTracer
 		src/RayTracer/Sphere.h
 		src/RayTracer/Tracer.h
 		src/RayTracer/Camera.h
+		src/RayTracer/Geometry.h
 
 		src/RayTracer/Screen.cpp
 		src/RayTracer/Ray.cpp
 		src/RayTracer/Sphere.cpp
 		src/RayTracer/Tracer.cpp
 		src/RayTracer/Camera.cpp
+		src/RayTracer/Geometry.cpp
 
 		src/RayTracer/main.cpp)
 
