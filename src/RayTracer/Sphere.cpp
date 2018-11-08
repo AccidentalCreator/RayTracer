@@ -1,11 +1,13 @@
 #include "Sphere.h"
 #include "Ray.h"
+#include <algorithm>
 
 
-Sphere::Sphere(glm::vec3 _center, int _radius)
+Sphere::Sphere(glm::vec3 _center, int _radius, glm::vec3 _colour)
 {
 	centre = _center;
 	radius = _radius;
+	colour = _colour;
 }
 
 Sphere::~Sphere()
@@ -13,15 +15,27 @@ Sphere::~Sphere()
 
 }
 
-glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersecion)
+#include <iostream>
+
+glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 {
-	return glm::vec3(255, 0, 0);
+	glm::vec3 sphereColour = colour;
+
+	glm::vec3 origin = _ray.direction;
+	glm::vec3 point = _ray.origin + origin * _intersection;
+	glm::vec3 normal = (point - centre) * (-1 / radius);
+
+	float facingRatio = glm::dot(normal, origin);
+
+	sphereColour *= facingRatio;
+
+	return sphereColour;
 }
 
 
 glm::vec3 Sphere::RaySphereIntersec(Ray *_ray)
 {
-
+	/*
 	//if (_ray->GetColourSet())
 	//{
 	//	return _ray->GetColour(); // Keeps its colour
@@ -49,8 +63,15 @@ glm::vec3 Sphere::RaySphereIntersec(Ray *_ray)
 	//{
 	//	return glm::vec3(0, 0, 0); // Sets colour to black
 	//}
-
+	*/
 	return glm::vec3(0, 0, 0);
+}
+
+glm::vec3 Sphere::Normalise(glm::vec3 _samplePoint)
+{	
+	glm::vec3 normal = glm::vec3(_samplePoint.x / _samplePoint.length(), _samplePoint.y / _samplePoint.length(), _samplePoint.z / _samplePoint.length());
+	
+	return normal;
 }
 
 float Sphere::ColMod(float _a, float _b, float _t)

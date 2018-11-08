@@ -45,3 +45,8 @@ glm::vec3 Geometry::SphereNormal(glm::vec3 _center, glm::vec3 _point)
 {
 	return glm::vec3();
 }
+
+glm::vec3 Geometry::ConvertColour(glm::vec3 _colour)
+{
+	return glm::vec3(_colour.x * 255, _colour.y * 255, _colour.z * 255);
+}

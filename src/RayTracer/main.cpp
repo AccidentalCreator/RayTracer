@@ -21,7 +21,7 @@ int main()
 	Tracer tracer;
 	Geometry geometry;
 	glm::vec3 colour;
-	Sphere sphere(glm::vec3(300, 200, 0), 10);
+	Sphere sphere(glm::vec3(300, 200, 0), 100, glm::vec3(1, 1, 0));
 
 
 	bool running = true;
@@ -54,6 +54,7 @@ int main()
 				{
 					point = geometry.ClosestPoint(ray, sphere, point);
 					colour = sphere.ShadeSphere(ray, point);
+					colour = geometry.ConvertColour(colour);
 				}
 				else
 				{

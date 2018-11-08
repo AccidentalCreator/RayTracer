@@ -16,6 +16,7 @@ public:
 	bool RaySphereIntersection();
 	float RayDistance(Ray _ray, glm::vec3 _center, int _radius);
 	glm::vec3 SphereNormal(glm::vec3 _center, glm::vec3 _point);
+	glm::vec3 ConvertColour(glm::vec3 _colour);
 
 private:
 	glm::vec3 a;
