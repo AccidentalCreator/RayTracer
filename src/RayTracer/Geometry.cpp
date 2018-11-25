@@ -2,13 +2,12 @@
 #include "Ray.h"
 #include "Sphere.h"
 
-glm::vec3 Geometry::ShortestDis(Ray _ray, Sphere _sphere)
+glm::vec3 Geometry::ShortestDis(Ray _ray, Sphere _sphere, glm::vec3 _origin)
 {
 	radius = _sphere.GetRadius();
-	glm::vec3 camera = glm::vec3(0, 0, 0);
 
-	a = _ray.origin - camera;
-	p = _sphere.GetCenter() - camera;
+	a = _ray.origin - _origin;
+	p = _sphere.GetCenter() - _origin;
 
 	x = a + ((p - a) * _ray.direction) * _ray.direction;
 
@@ -49,4 +48,11 @@ glm::vec3 Geometry::SphereNormal(glm::vec3 _center, glm::vec3 _point)
 glm::vec3 Geometry::ConvertColour(glm::vec3 _colour)
 {
 	return glm::vec3(_colour.x * 255, _colour.y * 255, _colour.z * 255);
+}
+
+glm::vec3 Geometry::Normalise(glm::vec3 _point)
+{
+	glm::vec3 normal = glm::vec3(_point.x / _point.length(), _point.y / _point.length(), _point.z / _point.length());
+
+	return normal;
 }

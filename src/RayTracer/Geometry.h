@@ -11,12 +11,13 @@ class Geometry
 {
 public:
 	
-	glm::vec3 ShortestDis(Ray _ray, Sphere _sphere);
+	glm::vec3 ShortestDis(Ray _ray, Sphere _sphere, glm::vec3 _origin);
 	glm::vec3 ClosestPoint(Ray _ray, Sphere _sphere, glm::vec3 _point);
 	bool RaySphereIntersection();
 	float RayDistance(Ray _ray, glm::vec3 _center, int _radius);
 	glm::vec3 SphereNormal(glm::vec3 _center, glm::vec3 _point);
 	glm::vec3 ConvertColour(glm::vec3 _colour);
+	glm::vec3 Normalise(glm::vec3 _point);
 
 private:
 	glm::vec3 a;

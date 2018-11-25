@@ -15,8 +15,6 @@ Sphere::~Sphere()
 
 }
 
-#include <iostream>
-
 glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 {
 	glm::vec3 sphereColour = colour;

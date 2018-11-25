@@ -19,6 +19,7 @@ public:
 
 	glm::vec3 GetCenter() { return centre; }
 	float GetRadius() { return radius; }
+	glm::vec3 GetColour() { return colour; }
 
 private:
 	glm::vec3 colour;

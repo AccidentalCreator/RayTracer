@@ -8,7 +8,7 @@ class Ray;
 class Camera
 {
 public:
-	Ray CreateRay(glm::vec2 _position);
+	Ray CreateRay(glm::vec3 _position);
 };
 
 #endif // !CAMERA_H
