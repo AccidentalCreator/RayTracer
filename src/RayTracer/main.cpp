@@ -28,8 +28,8 @@ int main()
 	//Sphere sphere2(glm::vec3(150, 200, 0), 100, glm::vec3(1, 0, 0));
 
 	std::vector<Sphere*> spheres;
-	spheres.push_back(new Sphere(glm::vec3(400, 200, 0), 100, glm::vec3(0, 0, 1)));
-	spheres.push_back(new Sphere(glm::vec3(150, 200, 0), 100, glm::vec3(1, 0, 0)));
+	spheres.push_back(new Sphere(glm::vec3(400, 200, 200), 100, glm::vec3(0, 0, 1)));
+	spheres.push_back(new Sphere(glm::vec3(150, 200, 200), 100, glm::vec3(1, 0, 0)));
 
 	bool running = true;
 
@@ -65,27 +65,28 @@ int main()
 						point = geometry.ClosestPoint(ray, *spheres.at(i), point);
 						colour = spheres.at(i)->ShadeSphere(ray, point);
 
-						// Reflection _________________________________________
+						//// Reflection _________________________________________
 
-						reflectionRay = camera.CreateRay(point);
-						reflectionRay.SetDirection(geometry.Normalise(point));
+						//reflectionRay = camera.CreateRay(point);
+						//reflectionRay.SetDirection(geometry.Normalise(point));
 
-						for (int z = 0; z < spheres.size(); z++)
-						{
-							if (i == z)
-							{
-								break;
-							}
+						//for (int z = 0; z < spheres.size(); z++)
+						//{
+						//	if (i == z)
+						//	{
+						//		break;
+						//	}
 
-							glm::vec3 reflectPoint = geometry.ShortestDis(reflectionRay, *spheres.at(z), point);
+						//	glm::vec3 reflectPoint = geometry.ShortestDis(reflectionRay, *spheres.at(z), point);
 
-							if (geometry.RaySphereIntersection())
-							{
-								//reflectColour = spheres.at(z)->GetColour();
-								colour = glm::vec3(1, 1, 1);
-								//colour += reflectColour;
-							}
-						}
+						//	if (geometry.RaySphereIntersection())
+						//	{
+						//		//reflectColour = spheres.at(z)->GetColour();
+						//		colour = glm::vec3(1, 1, 1);
+						//		//colour += reflectColour;
+						//	}
+						//}
+
 						colour = geometry.ConvertColour(colour);
 						ray.SetColour(colour);
 					}

@@ -1,6 +1,7 @@
 #include "Sphere.h"
 #include "Ray.h"
 #include <algorithm>
+#include <iostream>
 
 
 Sphere::Sphere(glm::vec3 _center, int _radius, glm::vec3 _colour)
@@ -19,6 +20,8 @@ glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 {
 	glm::vec3 sphereColour = colour;
 
+	// Old Shading
+	/*
 	glm::vec3 origin = _ray.direction;
 	glm::vec3 point = _ray.origin + origin * _intersection;
 	glm::vec3 normal = (point - centre) * (-1 / radius);
@@ -26,6 +29,29 @@ glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 	float facingRatio = glm::dot(normal, origin);
 
 	sphereColour *= facingRatio;
+	*/
+
+	glm::vec3 lightPosition(0, 0, 0);
+	glm::vec3 lightIntesity (1, 1, 1);
+
+	glm::vec3 sampleToLight =  lightPosition - _intersection;
+	// Normal of sample to light
+	glm::vec3 normalSL = glm::normalize(sampleToLight);
+
+	// Normal of sample point
+	glm::vec3 sampleNormal = (_intersection - centre) / radius;
+
+	float diffuselighting;
+	// Normal of sample point and sample to light for dot
+	// Calculate direction from light source
+	diffuselighting = glm::max(glm::dot(sampleNormal, normalSL), 0.0f);
+	
+	sphereColour = diffuselighting * lightIntesity * colour;
+
+
+	// Speculare uses half vector 
+
+	// dot from sample point to lightsource
 
 	return sphereColour;
 }

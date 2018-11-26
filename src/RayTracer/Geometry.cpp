@@ -30,7 +30,7 @@ bool Geometry::RaySphereIntersection()
 glm::vec3 Geometry::ClosestPoint(Ray _ray, Sphere _sphere, glm::vec3 _point)
 {
 	float x = glm::sqrt((_sphere.GetRadius() * _sphere.GetRadius()) - (distance * distance));
-	glm::vec3 closestPoint = a + (((p - a) * _ray.direction) - x) * _ray.direction;
+	glm::vec3 closestPoint = a + (glm::dot((p - a), glm::normalize(_ray.direction)) - x) * glm::normalize(_ray.direction);
 
 	return closestPoint;
 }
