@@ -35,8 +35,8 @@ int main()
 
 	// Set spheres
 	std::vector<std::shared_ptr<Sphere>> spheres;
-	spheres.push_back(std::make_shared<Sphere>(glm::vec3(400, 200, 200), 100, glm::vec3(0, 0, 1), light));
-	spheres.push_back(std::make_shared<Sphere>(glm::vec3(200, 200, 200), 100, glm::vec3(1, 0, 0), light));
+	spheres.push_back(std::make_shared<Sphere>(glm::vec3(400, 200, 200), 100, glm::fvec3(0, 0, 0.5f), light));
+	spheres.push_back(std::make_shared<Sphere>(glm::vec3(200, 200, 200), 100, glm::fvec3(0.5f, 0, 0), light));
 
 
 	bool running = true;
@@ -72,8 +72,7 @@ int main()
 				{
 					Ray ray = camera.CreateRay(glm::vec3(x, y, 0));
 
-
-					glm::vec3 colour(0,0,0);
+					glm::fvec3 colour(0,0,0);
 					traceRay.reset();
 					traceRay.TraceRay(ray, geometry, spheres, colour);
 
@@ -93,24 +92,3 @@ int main()
 	}
 		screen.CloseScreen();
 }
-
-
-// Reflection _________________________________________
-
-//ray = camera.CreateRay(glm::vec2(point.x, point.y));
-
-//for (int z = 0; z < spheres.size(); z++)
-//{
-//	if (i == z)
-//	{
-//		break;
-//	}
-
-//	glm::vec3 reflectPoint = geometry.ShortestDis(ray, *spheres.at(z), point);
-
-//	if (geometry.RaySphereIntersection())
-//	{
-//		reflectPoint = geometry.ClosestPoint(ray, *spheres.at(z), point);
-//		colour += spheres.at(z)->ShadeSphere(ray, reflectPoint);
-//	}
-//}

@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-Sphere::Sphere(glm::vec3 _center, int _radius, glm::vec3 _colour, Light _light)
+Sphere::Sphere(glm::vec3 _center, int _radius, glm::fvec3 _colour, Light _light)
 {
 	centre = _center;
 	radius = _radius;
@@ -20,9 +20,9 @@ Sphere::~Sphere()
 
 }
 
-glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
+glm::fvec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection, glm::fvec3 _colour)
 {
-	glm::vec3 sphereColour = colour;
+	glm::fvec3 sphereColour = _colour;
 
 	glm::vec3 sampleToLight = light.GetPosition()  - _intersection;
 	// Normal of sample to light
@@ -43,6 +43,13 @@ glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 	return sphereColour;
 }
 
+glm::vec3 Sphere::SphereColour(Ray _ray, glm::vec3 _intersection)
+{
+	glm::fvec3 sphereColour = colour; 
+
+	return sphereColour;
+}
+
 glm::vec3 Sphere::Reflection(Ray _ray, glm::vec3 _intersection)
 {
 	
@@ -50,20 +57,15 @@ glm::vec3 Sphere::Reflection(Ray _ray, glm::vec3 _intersection)
 	glm::vec3 sampleNormal = (_intersection - centre) / radius;
 
 	// Sample to light vector
-	glm::vec3 sampleToLight = light.GetPosition() - _intersection;
+	glm::vec3 sampleToLight = _intersection - light.GetPosition();
 
 	// Normal of sample to light
 	glm::vec3 normalSL = glm::normalize(sampleToLight);
 
 	// Specular reflection equation
 	
-	glm::vec3 reflectionVector = (2 * (glm::dot(sampleNormal, -normalSL)) * sampleNormal - normalSL);
+	glm::vec3 reflectionVector = (2 * (glm::dot(normalSL, -sampleNormal)) * sampleNormal - normalSL);
 	
-	//glm::vec3 reflectionVector = glm::reflect(-normalSL, sampleNormal);
-
-
-	//glm::vec3 reflectionVector = _ray.direction - 2 * glm::dot(_ray.direction, sampleNormal) * sampleNormal;
-
 	return reflectionVector;
 }
 

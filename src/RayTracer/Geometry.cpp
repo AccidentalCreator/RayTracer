@@ -9,7 +9,9 @@ glm::vec3 Geometry::ShortestDis(Ray _ray, Sphere _sphere, glm::vec3 _origin)
 	a = _ray.origin -_origin;
 	p = _sphere.GetCenter() - _origin;
 
-	x = a + ((p - a) * _ray.direction) * _ray.direction;
+	glm::vec3 dirNormal = glm::normalize(_ray.direction);
+
+	x = a + ((p - a) * dirNormal) * dirNormal;
 
 	return x;
 }
@@ -29,19 +31,23 @@ bool Geometry::RaySphereIntersection()
 
 bool Geometry::RayPlaneIntersection()
 {
-
 	return false;
 }
 
-glm::vec3 Geometry::ClosestPoint(Ray _ray, Sphere _sphere, glm::vec3 _point)
+glm::vec3 Geometry::ClosestPoint(Ray _ray, Sphere _sphere)
 {
-	float x = glm::sqrt((_sphere.GetRadius() * _sphere.GetRadius()) - (distance * distance));
-	glm::vec3 closestPoint = a + (glm::dot((p - a), glm::normalize(_ray.direction)) - x) * glm::normalize(_ray.direction);
+	glm::vec3 dirNormal = glm::normalize(_ray.direction);
+
+	float d = glm::length(p - a - glm::dot((p - a), dirNormal) *  dirNormal);
+
+	float X = glm::sqrt((_sphere.GetRadius() * _sphere.GetRadius()) - (d * d));
+
+	glm::vec3 closestPoint = a + (glm::dot((p - a), dirNormal) - X) * dirNormal;
 
 	return closestPoint;
 }
 
-glm::vec3 Geometry::ConvertColour(glm::vec3 _colour)
+glm::fvec3 Geometry::ConvertColour(glm::fvec3 _colour)
 {
-	return glm::vec3(_colour.x * 255, _colour.y * 255, _colour.z * 255);
+	return glm::fvec3(_colour.x * 255, _colour.y * 255, _colour.z * 255);
 }
