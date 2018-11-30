@@ -5,10 +5,12 @@
 
 #include "Screen.h"
 #include "Camera.h"
-#include "Tracer.h"
 #include "Ray.h"
 #include "Sphere.h"
 #include "Geometry.h"
+#include "Light.h"
+#include "Tracer.h"
+#include "Plane.h"
 
 
 int main()
@@ -17,19 +19,25 @@ int main()
 	// Creates Screen
 	screen.CreateScreen(glm::vec2(640, 480));
 
-	Ray ray;
+	bool finished = false;
+
 	Ray reflectionRay;
 	Camera camera;
-	Tracer tracer;
-	Geometry geometry;
-	glm::vec3 colour;
-	glm::vec3 reflectColour;
-	//Sphere sphere(glm::vec3(300, 200, 0), 100, glm::vec3(0, 0, 1));
-	//Sphere sphere2(glm::vec3(150, 200, 0), 100, glm::vec3(1, 0, 0));
+	Light light;
+//	Geometry geometry;
 
-	std::vector<Sphere*> spheres;
-	spheres.push_back(new Sphere(glm::vec3(400, 200, 200), 100, glm::vec3(0, 0, 1)));
-	spheres.push_back(new Sphere(glm::vec3(150, 200, 200), 100, glm::vec3(1, 0, 0)));
+	// Lighting set up
+	light.SetPosition(glm::vec3(280, screen.GetScreenSize().y / 2, -500));
+	light.SetIntesity(glm::vec3(1, 1, 1));
+
+	std::shared_ptr<Plane> plane;
+	plane = std::make_shared<Plane>(glm::vec3(0, screen.GetScreenSize().y - 20, 0), glm::vec3(100, 10, 100), glm::vec3(1, 1, 1));
+
+	// Set spheres
+	std::vector<std::shared_ptr<Sphere>> spheres;
+	spheres.push_back(std::make_shared<Sphere>(glm::vec3(400, 200, 200), 100, glm::vec3(0, 0, 1), light));
+	spheres.push_back(std::make_shared<Sphere>(glm::vec3(200, 200, 200), 100, glm::vec3(1, 0, 0), light));
+
 
 	bool running = true;
 
@@ -43,67 +51,47 @@ int main()
 			{
 				running = false;
 			}
+
 		}
 
-		// Clear Screen / Set background Colour
-		screen.ClearScreen();
-	
-		for (int y = 0; y < screen.GetScreenSize().y; y++)
+		if (!finished)
 		{
-			for (int x = 0; x < screen.GetScreenSize().x; x++)
+
+			// Clear Screen / Set background Colour
+			screen.ClearScreen();
+
+			int screenSizeY = screen.GetScreenSize().y;
+			Tracer traceRay;
+
+			//#pragma omp parallel
+			//#pragma omp for 
+			for (int y = 0; y < screenSizeY; y++)
 			{
-				// Creates ray
-				ray = camera.CreateRay(glm::vec3(x, y, 0));
-				for (int i = 0; i < spheres.size(); i++)
+				Geometry geometry;
+				for (int x = 0; x < screen.GetScreenSize().x; x++)
 				{
-					glm::vec3 point = geometry.ShortestDis(ray, *spheres.at(i), glm::vec3(0, 0, 0));
+					Ray ray = camera.CreateRay(glm::vec3(x, y, 0));
 
-					// If point in sphere
-					if (geometry.RaySphereIntersection())
+
+					glm::vec3 colour(0,0,0);
+					traceRay.reset();
+					traceRay.TraceRay(ray, geometry, spheres, colour);
+
+					ray.SetColour(colour);
+
+					//#pragma omp critical
 					{
-						// Find closest point
-						point = geometry.ClosestPoint(ray, *spheres.at(i), point);
-						colour = spheres.at(i)->ShadeSphere(ray, point);
-
-						//// Reflection _________________________________________
-
-						//reflectionRay = camera.CreateRay(point);
-						//reflectionRay.SetDirection(geometry.Normalise(point));
-
-						//for (int z = 0; z < spheres.size(); z++)
-						//{
-						//	if (i == z)
-						//	{
-						//		break;
-						//	}
-
-						//	glm::vec3 reflectPoint = geometry.ShortestDis(reflectionRay, *spheres.at(z), point);
-
-						//	if (geometry.RaySphereIntersection())
-						//	{
-						//		//reflectColour = spheres.at(z)->GetColour();
-						//		colour = glm::vec3(1, 1, 1);
-						//		//colour += reflectColour;
-						//	}
-						//}
-
-						colour = geometry.ConvertColour(colour);
-						ray.SetColour(colour);
-					}
-					else
-					{
-						colour = ray.GetColour();
-						ray.SetColour(colour);
+						screen.DrawPixel(x, y, ray.GetColour());
 					}
 				}
-				screen.DrawPixel(x, y, ray.GetColour());
 			}
+			// Displays SDL contents
+			screen.ShowScreen();
+			finished = true;
 		}
-		// Displays SDL contents
-		screen.ShowScreen();
+		// Cleans up SDL
 	}
-	// Cleans up SDL
-	screen.CloseScreen();
+		screen.CloseScreen();
 }
 
 

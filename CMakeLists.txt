@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(RAYTRACER)
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /openmp")
 
 if (MSVC)
 	include_directories(
@@ -22,16 +23,20 @@ add_executable(RayTracer
 		src/RayTracer/Screen.h
 		src/RayTracer/Ray.h
 		src/RayTracer/Sphere.h
-		src/RayTracer/Tracer.h
 		src/RayTracer/Camera.h
 		src/RayTracer/Geometry.h
+		src/RayTracer/Light.h
+		src/RayTracer/Plane.h
+		src/RayTracer/Tracer.h
 
 		src/RayTracer/Screen.cpp
 		src/RayTracer/Ray.cpp
 		src/RayTracer/Sphere.cpp
-		src/RayTracer/Tracer.cpp
 		src/RayTracer/Camera.cpp
 		src/RayTracer/Geometry.cpp
+		src/RayTracer/Light.cpp
+		src/RayTracer/Plane.cpp
+		src/RayTracer/Tracer.cpp
 
 		src/RayTracer/main.cpp)
 

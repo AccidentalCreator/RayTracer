@@ -1,18 +1,27 @@
+#pragma once
 #ifndef TRACER_H
-#define TRACER_H
 
+#include <memory>
+#include <vector>
 #include <glm.hpp>
 
+#include "Camera.h"
+
 class Ray;
+class Geometry;
+class Sphere;
 
 class Tracer
 {
 public:
-	glm::vec3 TraceRay(Ray _ray);
-
+	Tracer();
+	~Tracer();
+	void TraceRay(Ray _ray, Geometry _geometry, std::vector<std::shared_ptr<Sphere>> spheres, glm::vec3 &colour);
+	void reset();
 private:
-	glm::vec3 colour;
-
+	Camera camera;
+	int r;
 };
 
+#define TRACER_H
 #endif // !TRACER_H

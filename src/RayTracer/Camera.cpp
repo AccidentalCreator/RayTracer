@@ -4,6 +4,10 @@
 
 #include <iostream>
 
+Camera::Camera()
+{
+}
+
 Ray Camera::CreateRay(glm::vec3 _position)
 {
 	Ray ray;
@@ -12,7 +16,6 @@ Ray Camera::CreateRay(glm::vec3 _position)
 	ray.origin.y = _position.y;
 	ray.origin.z = _position.z;
 	ray.direction = glm::vec3(0, 0, 1);
-	ray.SetColourSet(false);
 
 	return ray;
 }

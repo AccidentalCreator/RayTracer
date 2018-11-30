@@ -6,7 +6,7 @@ glm::vec3 Geometry::ShortestDis(Ray _ray, Sphere _sphere, glm::vec3 _origin)
 {
 	radius = _sphere.GetRadius();
 
-	a = _ray.origin - _origin;
+	a = _ray.origin -_origin;
 	p = _sphere.GetCenter() - _origin;
 
 	x = a + ((p - a) * _ray.direction) * _ray.direction;
@@ -27,6 +27,12 @@ bool Geometry::RaySphereIntersection()
 	}
 }
 
+bool Geometry::RayPlaneIntersection()
+{
+
+	return false;
+}
+
 glm::vec3 Geometry::ClosestPoint(Ray _ray, Sphere _sphere, glm::vec3 _point)
 {
 	float x = glm::sqrt((_sphere.GetRadius() * _sphere.GetRadius()) - (distance * distance));
@@ -35,24 +41,7 @@ glm::vec3 Geometry::ClosestPoint(Ray _ray, Sphere _sphere, glm::vec3 _point)
 	return closestPoint;
 }
 
-float Geometry::RayDistance(Ray _ray, glm::vec3 _center, int _radius)
-{
-	return 0.0f;
-}
-
-glm::vec3 Geometry::SphereNormal(glm::vec3 _center, glm::vec3 _point)
-{
-	return glm::vec3();
-}
-
 glm::vec3 Geometry::ConvertColour(glm::vec3 _colour)
 {
 	return glm::vec3(_colour.x * 255, _colour.y * 255, _colour.z * 255);
-}
-
-glm::vec3 Geometry::Normalise(glm::vec3 _point)
-{
-	glm::vec3 normal = glm::vec3(_point.x / _point.length(), _point.y / _point.length(), _point.z / _point.length());
-
-	return normal;
 }

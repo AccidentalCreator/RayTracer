@@ -1,14 +1,18 @@
 #include "Sphere.h"
 #include "Ray.h"
+#include "Camera.h"
+#include "Geometry.h"
+
 #include <algorithm>
 #include <iostream>
 
 
-Sphere::Sphere(glm::vec3 _center, int _radius, glm::vec3 _colour)
+Sphere::Sphere(glm::vec3 _center, int _radius, glm::vec3 _colour, Light _light)
 {
 	centre = _center;
 	radius = _radius;
 	colour = _colour;
+	light = _light;
 }
 
 Sphere::~Sphere()
@@ -20,21 +24,7 @@ glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 {
 	glm::vec3 sphereColour = colour;
 
-	// Old Shading
-	/*
-	glm::vec3 origin = _ray.direction;
-	glm::vec3 point = _ray.origin + origin * _intersection;
-	glm::vec3 normal = (point - centre) * (-1 / radius);
-
-	float facingRatio = glm::dot(normal, origin);
-
-	sphereColour *= facingRatio;
-	*/
-
-	glm::vec3 lightPosition(0, 0, 0);
-	glm::vec3 lightIntesity (1, 1, 1);
-
-	glm::vec3 sampleToLight =  lightPosition - _intersection;
+	glm::vec3 sampleToLight = light.GetPosition()  - _intersection;
 	// Normal of sample to light
 	glm::vec3 normalSL = glm::normalize(sampleToLight);
 
@@ -42,66 +32,38 @@ glm::vec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 	glm::vec3 sampleNormal = (_intersection - centre) / radius;
 
 	float diffuselighting;
-	// Normal of sample point and sample to light for dot
+
 	// Calculate direction from light source
 	diffuselighting = glm::max(glm::dot(sampleNormal, normalSL), 0.0f);
-	
-	sphereColour = diffuselighting * lightIntesity * colour;
 
+	sphereColour = diffuselighting * light.GetIntensity() * colour;
 
 	// Speculare uses half vector 
-
-	// dot from sample point to lightsource
-
+	// change to sphere colour
 	return sphereColour;
 }
 
-
-glm::vec3 Sphere::RaySphereIntersec(Ray *_ray)
+glm::vec3 Sphere::Reflection(Ray _ray, glm::vec3 _intersection)
 {
-	/*
-	//if (_ray->GetColourSet())
-	//{
-	//	return _ray->GetColour(); // Keeps its colour
-	//							 // Need to check which is infront
-	//}
-
-	//float t = glm::dot(centre - _ray->origin, glm::normalize(_ray->direction));
-	//glm::vec3 p = _ray->origin + glm::normalize(_ray->direction) * t;
-
-	//float y = glm::length(centre - p);
-	// // if y < radius does not hit sphere
-	//if (y < radius)
-	//{
-	//	float x = glm::sqrt(radius * radius - y * y);
-	//	float t1 = t - x;
-	//	float t2 = t + x;
-
-	//	float colour = ColMod(centre.z, centre.z - radius, t1);
-
-	//	_ray->SetColour(glm::vec3(colour));
-
-	//	return glm::vec3(colour);
-	//}
-	//else
-	//{
-	//	return glm::vec3(0, 0, 0); // Sets colour to black
-	//}
-	*/
-	return glm::vec3(0, 0, 0);
-}
-
-glm::vec3 Sphere::Normalise(glm::vec3 _samplePoint)
-{	
-	glm::vec3 normal = glm::vec3(_samplePoint.x / _samplePoint.length(), _samplePoint.y / _samplePoint.length(), _samplePoint.z / _samplePoint.length());
 	
-	return normal;
-}
+	// Normal of sample point
+	glm::vec3 sampleNormal = (_intersection - centre) / radius;
 
-float Sphere::ColMod(float _a, float _b, float _t)
-{
-	float colour = ((_t - _a) / (_b - _a)) * 255;
+	// Sample to light vector
+	glm::vec3 sampleToLight = light.GetPosition() - _intersection;
 
-	return colour;
+	// Normal of sample to light
+	glm::vec3 normalSL = glm::normalize(sampleToLight);
+
+	// Specular reflection equation
+	
+	glm::vec3 reflectionVector = (2 * (glm::dot(sampleNormal, -normalSL)) * sampleNormal - normalSL);
+	
+	//glm::vec3 reflectionVector = glm::reflect(-normalSL, sampleNormal);
+
+
+	//glm::vec3 reflectionVector = _ray.direction - 2 * glm::dot(_ray.direction, sampleNormal) * sampleNormal;
+
+	return reflectionVector;
 }
 

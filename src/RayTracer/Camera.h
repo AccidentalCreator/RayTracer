@@ -8,6 +8,8 @@ class Ray;
 class Camera
 {
 public:
+	Camera();
+
 	Ray CreateRay(glm::vec3 _position);
 };
 
