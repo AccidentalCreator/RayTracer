@@ -20,30 +20,38 @@ Sphere::~Sphere()
 
 }
 
-glm::fvec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection, glm::fvec3 _colour)
+glm::fvec3 Sphere::ShadeSphere(Ray _ray, glm::vec3 _intersection)
 {
-	glm::fvec3 sphereColour = _colour;
+	// Ambient Lighting
 
-	glm::vec3 sampleToLight = light.GetPosition()  - _intersection;
-	// Normal of sample to light
-	glm::vec3 normalSL = glm::normalize(sampleToLight);
+	float ambStrength = 0.1f;
+	glm::vec3 ambient = ambStrength * colour;
+
+	// Difuse Lighting
+
+	// Normal of Light to sample
+	glm::vec3 lightToSample = glm::normalize(light.GetPosition()  - _intersection);
 
 	// Normal of sample point
-	glm::vec3 sampleNormal = (_intersection - centre) / radius;
-
-	float diffuselighting;
+	glm::vec3 sampleNormal = glm::normalize((_intersection - centre) / radius);
 
 	// Calculate direction from light source
-	diffuselighting = glm::max(glm::dot(sampleNormal, normalSL), 0.0f);
+	float diffuselighting = glm::max(glm::dot(sampleNormal, lightToSample), 0.0f);
 
-	sphereColour = diffuselighting * light.GetIntensity() * colour;
+	// Specular lighting
 
-	// Speculare uses half vector 
-	// change to sphere colour
+	float specStrength = 0.5f;
+	glm::vec3 view = glm::normalize(-_ray.direction);
+	glm::vec3 reflection = glm::reflect(-lightToSample, sampleNormal);
+	float specular = glm::pow(glm::max(glm::dot(view, glm::normalize(reflection)), 0.0f), 64);
+	specular *= specStrength;
+
+	glm::fvec3 sphereColour = (diffuselighting + ambient + specular) * light.GetIntensity() * colour;
+
 	return sphereColour;
 }
 
-glm::vec3 Sphere::SphereColour(Ray _ray, glm::vec3 _intersection)
+glm::vec3 Sphere::SphereColour()
 {
 	glm::fvec3 sphereColour = colour; 
 
@@ -52,19 +60,18 @@ glm::vec3 Sphere::SphereColour(Ray _ray, glm::vec3 _intersection)
 
 glm::vec3 Sphere::Reflection(Ray _ray, glm::vec3 _intersection)
 {
-	
 	// Normal of sample point
 	glm::vec3 sampleNormal = (_intersection - centre) / radius;
 
-	// Sample to light vector
-	glm::vec3 sampleToLight = _intersection - light.GetPosition();
+	// Normal of Light to sample
+	glm::vec3 lightToSample = glm::normalize(_intersection - light.GetPosition());
 
 	// Normal of sample to light
-	glm::vec3 normalSL = glm::normalize(sampleToLight);
+	//glm::vec3 normalSL = glm::normalize(lightToSample);
 
 	// Specular reflection equation
 	
-	glm::vec3 reflectionVector = (2 * (glm::dot(normalSL, -sampleNormal)) * sampleNormal - normalSL);
+	glm::vec3 reflectionVector = glm::reflect(lightToSample, sampleNormal);
 	
 	return reflectionVector;
 }

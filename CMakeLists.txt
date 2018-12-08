@@ -28,6 +28,7 @@ add_executable(RayTracer
 		src/RayTracer/Light.h
 		src/RayTracer/Plane.h
 		src/RayTracer/Tracer.h
+		src/RayTracer/Timer.h
 
 		src/RayTracer/Screen.cpp
 		src/RayTracer/Ray.cpp
@@ -37,6 +38,7 @@ add_executable(RayTracer
 		src/RayTracer/Light.cpp
 		src/RayTracer/Plane.cpp
 		src/RayTracer/Tracer.cpp
+		src/RayTracer/Timer.cpp
 
 		src/RayTracer/main.cpp)
 
